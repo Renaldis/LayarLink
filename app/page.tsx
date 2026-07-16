@@ -2,6 +2,7 @@ import { ArrowRight, Video } from "lucide-react";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { RecorderShell } from "@/components/recorder/recorder-shell";
 
 export default async function Home() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -37,6 +38,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      {isSignedIn && <RecorderShell />}
     </main>
   );
 }
