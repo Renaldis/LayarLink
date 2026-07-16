@@ -9,7 +9,7 @@ export function SiteHeader({ userName }: { userName?: string }) {
         LayarLink
       </Link>
       {userName ? (
-        <span className="rounded-xl bg-[#f3f2f8] px-4 py-2 font-sans text-sm font-semibold text-[#302d3a]">Hi, {userName}</span>
+        <div className="flex items-center gap-3"><Link className="font-sans text-sm font-semibold text-[#5a5565] transition hover:text-[#1d1a27]" href="/videos">My videos</Link><span className="rounded-xl bg-[#f3f2f8] px-4 py-2 font-sans text-sm font-semibold text-[#302d3a]">Hi, {userName}</span></div>
       ) : (
         <Link className="rounded-xl bg-[#1d1a27] px-4 py-2 font-sans text-sm font-semibold text-white transition hover:bg-[#343041]" href="/signin">Sign in</Link>
       )}

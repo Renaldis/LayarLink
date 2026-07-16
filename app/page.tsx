@@ -22,6 +22,7 @@ export default async function Home() {
           <Link className="relative mt-9 inline-flex items-center gap-2 rounded-2xl bg-[#625df5] px-5 py-3.5 font-sans text-base font-bold text-white shadow-[0_16px_35px_rgba(98,93,245,0.28)] transition hover:-translate-y-0.5 hover:bg-[#4e48db]" href={actionHref}>
             <Video aria-hidden="true" size={18} /> Start recording <ArrowRight aria-hidden="true" size={18} />
           </Link>
+          {isSignedIn && <Link className="relative ml-3 inline-flex items-center gap-2 rounded-2xl border border-[#dcd9e6] bg-white px-5 py-3.5 font-sans text-base font-bold text-[#302d3a] transition hover:border-[#625df5]" href="/videos">Manage videos</Link>}
           <div className="relative mx-auto mt-11 flex max-w-md flex-wrap justify-center gap-2 font-sans text-xs font-medium text-[#6f6c7b]">
             <span className="rounded-full bg-[#f3f2f8] px-3 py-1.5">Screen, app, or tab</span>
             <span className="rounded-full bg-[#f3f2f8] px-3 py-1.5">Audio when available</span>
