@@ -25,6 +25,7 @@ model User {
   videos        Video[]
   folders       Folder[]
   comments      Comment[]
+  uploadIntents UploadIntent[]
 
   @@map("user")
 }
@@ -116,6 +117,23 @@ model Video {
 
   @@index([ownerId, createdAt])
   @@index([expiresAt, deletedAt])
+}
+
+model UploadIntent {
+  id          String   @id @default(cuid())
+  ownerId     String
+  folderId    String?
+  title       String
+  objectKey   String   @unique
+  mimeType    String
+  byteSize    Int
+  durationSec Int
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  createdAt   DateTime @default(now())
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId, expiresAt])
 }
 
 model Comment {
