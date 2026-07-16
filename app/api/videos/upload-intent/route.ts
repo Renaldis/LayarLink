@@ -23,6 +23,7 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") return NextResponse.json({ error: "Sign in required." }, { status: 401 });
     if (error instanceof z.ZodError) return NextResponse.json({ error: "Invalid recording metadata." }, { status: 400 });
+    console.error("Unable to prepare R2 upload intent", error instanceof Error ? { name: error.name, message: error.message } : error);
     return NextResponse.json({ error: "Unable to prepare upload." }, { status: 500 });
   }
 }
