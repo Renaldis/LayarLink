@@ -3,6 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { RecorderShell } from "@/components/recorder/recorder-shell";
+import { SiteHeader } from "@/components/layout/site-header";
 
 export default async function Home() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -11,17 +12,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-white px-6 py-6 text-[#1d1a27] sm:px-10">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between">
-        <Link className="flex items-center gap-2 font-sans text-lg font-bold tracking-tight" href="/">
-          <span className="grid size-8 place-items-center rounded-[10px] bg-[#625df5] text-white"><Video aria-hidden="true" size={16} /></span>
-          capture
-        </Link>
-        {isSignedIn ? (
-          <span className="rounded-xl bg-[#f3f2f8] px-4 py-2 font-sans text-sm font-semibold text-[#302d3a]">Hi, {session?.user.name}</span>
-        ) : (
-          <Link className="rounded-xl bg-[#1d1a27] px-4 py-2 font-sans text-sm font-semibold text-white transition hover:bg-[#343041]" href="/signin">Sign in</Link>
-        )}
-      </nav>
+      <SiteHeader userName={session?.user.name} />
       <section className="mx-auto flex min-h-[calc(100vh-96px)] max-w-4xl flex-col items-center justify-center text-center">
         <div className="relative">
           <div className="pointer-events-none absolute -inset-20 -z-0 rounded-full bg-[#e4e2ff] blur-3xl" />
