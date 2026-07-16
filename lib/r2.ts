@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const accountId = process.env.R2_ACCOUNT_ID;
@@ -25,4 +25,9 @@ export async function createUploadUrl(input: { key: string; mimeType: string; by
 
 export async function createPlaybackUrl(key: string) {
   return getSignedUrl(client, new GetObjectCommand({ Bucket: bucket, Key: key }), { expiresIn: 60 * 60 });
+}
+
+export async function verifyUploadedObject(key: string, expectedByteSize: number) {
+  const object = await client.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
+  return object.ContentLength === expectedByteSize;
 }
