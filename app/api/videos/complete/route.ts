@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/current-user";
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     if (!intent) return NextResponse.json({ error: "Upload intent is unavailable." }, { status: 404 });
     if (!(await verifyUploadedObject(intent.objectKey, intent.byteSize))) return NextResponse.json({ error: "Uploaded file could not be verified." }, { status: 400 });
     const settings = await db.appSetting.upsert({ where: { id: 1 }, update: {}, create: { id: 1, defaultRetentionDays: 30 } });
-    const video = await db.$transaction(async (tx) => {
+    const video = await db.$transaction(async (tx: Prisma.TransactionClient) => {
       const created = await tx.video.create({ data: { ownerId: user.id, title: intent.title, objectKey: intent.objectKey, mimeType: intent.mimeType, byteSize: intent.byteSize, durationSec: intent.durationSec, expiresAt: getExpiresAt(new Date(), settings.defaultRetentionDays), publicId: createPublicId() } });
       await tx.uploadIntent.update({ where: { id: intent.id }, data: { consumedAt: new Date() } });
       return created;
