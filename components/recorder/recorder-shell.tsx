@@ -2,7 +2,7 @@
 
 import { Mic, MonitorUp, RotateCcw, Square, Video } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { MAX_RECORDING_SECONDS, formatDuration } from "@/lib/recorder-utils";
+import { MAX_RECORDING_SECONDS, formatDuration, normalizeVideoMimeType } from "@/lib/recorder-utils";
 import { ScreenRecorder } from "./media-recorder";
 
 type Status = "idle" | "recording" | "reviewing";
@@ -70,10 +70,11 @@ export function RecorderShell() {
     if (!recording) return;
     setSharing(true); setError(null);
     try {
-      const intentResponse = await fetch("/api/videos/upload-intent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title, mimeType: recording.mimeType, byteSize: recording.blob.size, durationSec: elapsed }) });
+      const uploadMimeType = normalizeVideoMimeType(recording.mimeType);
+      const intentResponse = await fetch("/api/videos/upload-intent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title, mimeType: uploadMimeType, byteSize: recording.blob.size, durationSec: elapsed }) });
       if (!intentResponse.ok) throw new Error("Unable to prepare video upload.");
       const { intentId, uploadUrl } = await intentResponse.json() as { intentId: string; uploadUrl: string };
-      const uploadResponse = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": recording.mimeType }, body: recording.blob });
+      const uploadResponse = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": uploadMimeType }, body: recording.blob });
       if (!uploadResponse.ok) throw new Error("Video upload failed.");
       const completeResponse = await fetch("/api/videos/complete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ intentId }) });
       if (!completeResponse.ok) throw new Error("Unable to publish video.");
